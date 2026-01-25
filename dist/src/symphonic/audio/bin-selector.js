@@ -51,7 +51,8 @@ function selectBinsAndPhases(seed, b, k_min, k_max, delta_k_min) {
     const maxAttempts = b * 100;
     while (bins.length < b && attempts < maxAttempts) {
         // Generate candidate bin
-        const hash = crypto.createHash('sha256')
+        const hash = crypto
+            .createHash('sha256')
             .update(seed)
             .update(Buffer.from([attempts]))
             .digest();
@@ -74,12 +75,13 @@ function selectBinsAndPhases(seed, b, k_min, k_max, delta_k_min) {
             bins.push(candidate);
             used.add(candidate);
             // Derive phase from same seed
-            const phaseHash = crypto.createHash('sha256')
+            const phaseHash = crypto
+                .createHash('sha256')
                 .update(seed)
                 .update(Buffer.from('phase'))
                 .update(Buffer.from([bins.length]))
                 .digest();
-            phases.push(2 * Math.PI * (phaseHash.readUInt32BE(0) / 0xFFFFFFFF));
+            phases.push(2 * Math.PI * (phaseHash.readUInt32BE(0) / 0xffffffff));
         }
         attempts++;
     }

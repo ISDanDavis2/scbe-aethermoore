@@ -51,7 +51,7 @@ async function createEnvelope(p) {
     };
     // 2) Derive subkeys via HKDF: k_enc, k_nonce, k_log
     const ikm = await (0, kms_js_1.getMasterKey)(p.kid);
-    const salt = node_crypto_1.default.randomBytes(32); // per-envelope salt; in prod you may pin/rotate by policy
+    const salt = node_crypto_1.default.randomBytes(32); // per-process salt; in prod you may pin/rotate by policy
     const infoBase = Buffer.from(`scbe:derivation:v1|env=${p.env}|provider=${p.provider_id}|intent=${p.intent_id}`);
     const k_enc = (0, hkdf_js_1.hkdfSha256)(ikm, salt, Buffer.concat([infoBase, Buffer.from('|k=enc')]), 32);
     const k_nonce = (0, hkdf_js_1.hkdfSha256)(ikm, salt, Buffer.concat([infoBase, Buffer.from('|k=nonce')]), 32);
@@ -107,9 +107,7 @@ async function verifyEnvelope(p) {
     }
     // 3) Key derivation (must bind env/provider/intent)
     const ikm = await (0, kms_js_1.getMasterKey)(envelope.kid);
-    const salt = fromB64u(envelope.salt);
-    if (salt.length !== 32)
-        throw new Error('bad salt size');
+    const salt = fromB64u(envelope.salt); // use the salt from the envelope
     const infoBase = Buffer.from(`scbe:derivation:v1|env=${envelope.aad.env}|provider=${envelope.aad.provider_id}|intent=${envelope.aad.intent_id}`);
     const k_enc = (0, hkdf_js_1.hkdfSha256)(ikm, salt, Buffer.concat([infoBase, Buffer.from('|k=enc')]), 32);
     const k_nonce = (0, hkdf_js_1.hkdfSha256)(ikm, salt, Buffer.concat([infoBase, Buffer.from('|k=nonce')]), 32);

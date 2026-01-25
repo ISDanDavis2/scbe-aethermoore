@@ -46,12 +46,12 @@ exports.harmonicCouplingMatrix = harmonicCouplingMatrix;
  * Row-wise softmax normalization
  */
 function softmaxRowWise(M) {
-    return M.map(row => {
+    return M.map((row) => {
         const maxVal = Math.max(...row);
-        const a = row.map(x => x - maxVal);
+        const a = row.map((x) => x - maxVal);
         const e = a.map(Math.exp);
         const Z = e.reduce((p, c) => p + c, 0) || 1;
-        return e.map(x => x / Z);
+        return e.map((x) => x / Z);
     });
 }
 /**
@@ -116,7 +116,7 @@ function halAttention(Q, K, V, d_Q, d_K, config) {
             throw new RangeError('d_model mismatch');
         }
         // Scaled dot-product: S = (Q × K^T) / √d_model
-        const S = matMul(Qb, transpose(Kb)).map(row => row.map(x => x / Math.sqrt(d_model)));
+        const S = matMul(Qb, transpose(Kb)).map((row) => row.map((x) => x / Math.sqrt(d_model)));
         // Harmonic coupling: S = S ⊙ Λ
         const Lambda = harmonicCouplingMatrix(d_Q[b], d_K[b], R, normalize);
         for (let i = 0; i < n; i++) {

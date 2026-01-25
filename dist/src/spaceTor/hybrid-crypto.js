@@ -58,22 +58,13 @@ class HybridSpaceCrypto {
             // 2. Encrypt the current onion
             const iv = crypto.randomBytes(16);
             const cipher = crypto.createCipheriv('aes-256-gcm', symmetricKey, iv);
-            const encryptedData = Buffer.concat([
-                cipher.update(onion),
-                cipher.final()
-            ]);
+            const encryptedData = Buffer.concat([cipher.update(onion), cipher.final()]);
             const authTag = cipher.getAuthTag();
             // 3. Wrap with Routing Header (Where to go next)
-            const nextHopId = (i === path.length - 1) ? 'DESTINATION' : path[i + 1].id;
+            const nextHopId = i === path.length - 1 ? 'DESTINATION' : path[i + 1].id;
             const header = Buffer.from(JSON.stringify({ next: nextHopId }));
             const delimiter = Buffer.from('::');
-            onion = Buffer.concat([
-                header,
-                delimiter,
-                iv,
-                authTag,
-                encryptedData
-            ]);
+            onion = Buffer.concat([header, delimiter, iv, authTag, encryptedData]);
         }
         return onion;
     }
@@ -103,10 +94,7 @@ class HybridSpaceCrypto {
         // 4. Decrypt
         const decipher = crypto.createDecipheriv('aes-256-gcm', symmetricKey, iv);
         decipher.setAuthTag(authTag);
-        const innerOnion = Buffer.concat([
-            decipher.update(encryptedData),
-            decipher.final()
-        ]);
+        const innerOnion = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
         return { nextHopId, innerOnion };
     }
     /**

@@ -181,8 +181,7 @@ class ControlFlowGraph {
         // Likely Hamiltonian if:
         // - Satisfies Dirac or Ore, OR
         // - Is bipartite with |A| = |B|
-        const likelyHamiltonian = satisfiesDirac || satisfiesOre ||
-            (bipartite.isBipartite && bipartite.imbalance === 0);
+        const likelyHamiltonian = satisfiesDirac || satisfiesOre || (bipartite.isBipartite && bipartite.imbalance === 0);
         return {
             satisfiesDirac,
             satisfiesOre,
@@ -221,7 +220,7 @@ class HamiltonianCFI {
         const n1 = this.cfg.getNeighbors(v1);
         const n2 = this.cfg.getNeighbors(v2);
         // Jaccard similarity of neighborhoods
-        const intersection = n1.filter(x => n2.includes(x)).length;
+        const intersection = n1.filter((x) => n2.includes(x)).length;
         const union = new Set([...n1, ...n2]).size;
         if (union === 0)
             return 1.0;

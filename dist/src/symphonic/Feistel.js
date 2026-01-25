@@ -89,9 +89,7 @@ class Feistel {
     deriveRoundKeys(masterKey) {
         const keys = [];
         // Hash the master key for uniform distribution
-        const masterHash = (0, crypto_1.createHash)(this.config.hashAlgorithm)
-            .update(masterKey)
-            .digest();
+        const masterHash = (0, crypto_1.createHash)(this.config.hashAlgorithm).update(masterKey).digest();
         for (let i = 0; i < this.config.rounds; i++) {
             // K_i = HMAC(Master, Round_Index)
             const hmac = (0, crypto_1.createHmac)(this.config.hashAlgorithm, masterHash);

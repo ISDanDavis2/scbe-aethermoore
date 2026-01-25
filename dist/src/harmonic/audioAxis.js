@@ -163,7 +163,7 @@ function generateTestSignal(frequency, duration, sampleRate = 44100) {
     const samples = Math.floor(duration * sampleRate);
     const signal = new Array(samples);
     for (let n = 0; n < samples; n++) {
-        signal[n] = Math.sin(2 * Math.PI * frequency * n / sampleRate);
+        signal[n] = Math.sin((2 * Math.PI * frequency * n) / sampleRate);
     }
     return signal;
 }

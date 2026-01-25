@@ -321,7 +321,7 @@ class CubicSpline6D {
         const d2Mag = Math.sqrt(d2.x1 ** 2 + d2.x2 ** 2 + d2.x3 ** 2 + d2.x4 ** 2 + d2.x5 ** 2 + d2.x6 ** 2);
         if (d1Mag < 1e-10)
             return 0;
-        return d2Mag / (d1Mag ** 2);
+        return d2Mag / d1Mag ** 2;
     }
 }
 exports.CubicSpline6D = CubicSpline6D;
@@ -358,8 +358,7 @@ class PHDMDeviationDetector {
         // Curvature at current position
         const curvature = this.geodesic.curvature(t);
         // Intrusion detection
-        const isIntrusion = deviation > this.snapThreshold ||
-            curvature > this.curvatureThreshold;
+        const isIntrusion = deviation > this.snapThreshold || curvature > this.curvatureThreshold;
         // 1-0 rhythm pattern (1=safe, 0=intrusion)
         const rhythmBit = isIntrusion ? '0' : '1';
         return {
@@ -408,7 +407,7 @@ class PHDMDeviationDetector {
      * Generate full rhythm pattern from results
      */
     static getRhythmPattern(results) {
-        return results.map(r => r.rhythmPattern).join('');
+        return results.map((r) => r.rhythmPattern).join('');
     }
 }
 exports.PHDMDeviationDetector = PHDMDeviationDetector;

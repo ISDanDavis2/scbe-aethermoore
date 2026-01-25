@@ -65,10 +65,7 @@ class HybridCrypto {
             nonce,
             intent,
         ].join('|');
-        const hmac = (0, crypto_1.createHmac)('sha256', secretKey)
-            .update(hmacData)
-            .digest('hex')
-            .substring(0, 32);
+        const hmac = (0, crypto_1.createHmac)('sha256', secretKey).update(hmacData).digest('hex').substring(0, 32);
         const signature = {
             fingerprint: encodedFingerprint,
             coherence: synthesis.coherence,

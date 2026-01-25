@@ -64,7 +64,7 @@ class DualChannelGate {
             AAD,
             Buffer.from(timestamp.toString()),
             Buffer.from(nonce),
-            payload
+            payload,
         ]);
         const expectedTag = crypto.createHmac('sha256', this.K).update(C).digest();
         const V_mac = crypto.timingSafeEqual(tag, expectedTag);
@@ -77,7 +77,8 @@ class DualChannelGate {
         }
         // --- Audio Channel ---
         // Derive bins/phases from challenge
-        const seed = crypto.createHmac('sha256', this.K)
+        const seed = crypto
+            .createHmac('sha256', this.K)
             .update(Buffer.from('bins'))
             .update(Buffer.from(timestamp.toString()))
             .update(Buffer.from(nonce))

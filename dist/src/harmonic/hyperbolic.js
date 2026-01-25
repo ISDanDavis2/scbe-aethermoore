@@ -45,7 +45,7 @@ function dot(u, v) {
  * Scale a vector by a scalar
  */
 function scale(v, s) {
-    return v.map(x => x * s);
+    return v.map((x) => x * s);
 }
 /**
  * Add two vectors
@@ -286,7 +286,7 @@ function multiWellGradient(p, wells) {
         const diff = sub(p, well.center);
         const distSq = normSq(diff);
         const expTerm = Math.exp(-distSq / (2 * well.sigma * well.sigma));
-        const factor = -well.weight * expTerm / (well.sigma * well.sigma);
+        const factor = (-well.weight * expTerm) / (well.sigma * well.sigma);
         for (let i = 0; i < p.length; i++) {
             grad[i] += factor * diff[i];
         }

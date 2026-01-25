@@ -117,7 +117,8 @@ export async function createEnvelope(p: CreateParams): Promise<Envelope> {
       kid: p.kid,
       nonce: b64u(nonce),
       tag: b64u(tag),
-      ciphertext: b64u(ct)
+      ciphertext: b64u(ct),
+      salt: b64u(salt)
     };
 
     metrics.timing('envelope_create_ms', metrics.now() - t0, {
@@ -157,7 +158,7 @@ export async function verifyEnvelope(p: VerifyParams): Promise<{ body: any }> {
 
   // 3) Key derivation (must bind env/provider/intent)
   const ikm = await getMasterKey(envelope.kid);
-  const salt = Buffer.alloc(32, 0); // must match create() policy; demo uses fresh salt => bind via info anyway
+  const salt = fromB64u(envelope.salt); // use the salt from the envelope
   const infoBase = Buffer.from(`scbe:derivation:v1|env=${envelope.aad.env}|provider=${envelope.aad.provider_id}|intent=${envelope.aad.intent_id}`);
   const k_enc = hkdfSha256(ikm, salt, Buffer.concat([infoBase, Buffer.from('|k=enc')]), 32);
   const k_nonce = hkdfSha256(ikm, salt, Buffer.concat([infoBase, Buffer.from('|k=nonce')]), 32);
