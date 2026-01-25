@@ -42,7 +42,7 @@ class SacredTongueTokenizer {
         this.tokenToByte = new Map();
         for (let b = 0; b < 256; b++) {
             const prefixIdx = b >> 4; // High nibble (0-15)
-            const suffixIdx = b & 0x0F; // Low nibble (0-15)
+            const suffixIdx = b & 0x0f; // Low nibble (0-15)
             const token = `${tongue.prefixes[prefixIdx]}'${tongue.suffixes[suffixIdx]}`;
             this.byteToToken.push(token);
             this.tokenToByte.set(token, b);
@@ -236,7 +236,9 @@ async function hkdfDerive(masterSecret, salt, info, length = 32) {
         throw new Error('Web Crypto API not available');
     }
     // Import master secret as HKDF key
-    const keyMaterial = await crypto.subtle.importKey('raw', masterSecret, 'HKDF', false, ['deriveBits']);
+    const keyMaterial = await crypto.subtle.importKey('raw', masterSecret, 'HKDF', false, [
+        'deriveBits',
+    ]);
     // Derive key using HKDF
     const derivedBits = await crypto.subtle.deriveBits({
         name: 'HKDF',
@@ -383,12 +385,7 @@ class SpiralSealSS1 {
         return {
             version: 'SS1',
             kid: this.kid,
-            capabilities: [
-                'AES-256-GCM',
-                'HKDF-SHA256',
-                'Sacred Tongue encoding',
-                'Key rotation',
-            ],
+            capabilities: ['AES-256-GCM', 'HKDF-SHA256', 'Sacred Tongue encoding', 'Key rotation'],
         };
     }
 }

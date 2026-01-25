@@ -87,7 +87,7 @@ exports.fibonacci1D = fibonacci1D;
  */
 function fibonacci2D(n, a = 1) {
     const points = [];
-    const goldenAngle = 2 * Math.PI / (exports.PHI * exports.PHI);
+    const goldenAngle = (2 * Math.PI) / (exports.PHI * exports.PHI);
     for (let i = 0; i < n; i++) {
         // Sunflower pattern using golden angle
         const r = a * Math.sqrt(i);
@@ -206,11 +206,8 @@ exports.penroseToLattice = penroseToLattice;
 function ammannBeenkerSquare(center, angle, size) {
     const vertices = [];
     for (let i = 0; i < 4; i++) {
-        const theta = angle + i * Math.PI / 2;
-        vertices.push([
-            center[0] + size * Math.cos(theta),
-            center[1] + size * Math.sin(theta),
-        ]);
+        const theta = angle + (i * Math.PI) / 2;
+        vertices.push([center[0] + size * Math.cos(theta), center[1] + size * Math.sin(theta)]);
     }
     return vertices;
 }
@@ -225,12 +222,9 @@ function ammannBeenkerRhombus(center, angle, size) {
     const r2 = size / Math.cos(Math.PI / 8);
     for (let i = 0; i < 4; i++) {
         const isLong = i % 2 === 1;
-        const theta = angle + i * Math.PI / 2 + (isLong ? halfAngle : 0);
+        const theta = angle + (i * Math.PI) / 2 + (isLong ? halfAngle : 0);
         const r = isLong ? r2 : r1;
-        vertices.push([
-            center[0] + r * Math.cos(theta),
-            center[1] + r * Math.sin(theta),
-        ]);
+        vertices.push([center[0] + r * Math.cos(theta), center[1] + r * Math.sin(theta)]);
     }
     return vertices;
 }
@@ -251,7 +245,7 @@ function cutAndProject2D(nDimensions, range, windowRadius = 1) {
     for (let d = 0; d < 2; d++) {
         projMatrix[d] = [];
         for (let i = 0; i < nDimensions; i++) {
-            projMatrix[d][i] = Math.cos(2 * Math.PI * (d * nDimensions + i + 1) / (2 * nDimensions));
+            projMatrix[d][i] = Math.cos((2 * Math.PI * (d * nDimensions + i + 1)) / (2 * nDimensions));
         }
     }
     // Internal space projection
@@ -259,7 +253,7 @@ function cutAndProject2D(nDimensions, range, windowRadius = 1) {
     for (let d = 0; d < nDimensions - 2; d++) {
         intMatrix[d] = [];
         for (let i = 0; i < nDimensions; i++) {
-            intMatrix[d][i] = Math.sin(2 * Math.PI * (d * nDimensions + i + 1) / (2 * nDimensions));
+            intMatrix[d][i] = Math.sin((2 * Math.PI * (d * nDimensions + i + 1)) / (2 * nDimensions));
         }
     }
     // Generate points from lattice
@@ -354,7 +348,7 @@ exports.diffractionPattern = diffractionPattern;
  * Check for n-fold rotational symmetry in diffraction pattern
  */
 function checkRotationalSymmetry(peaks, n, tolerance = 0.1) {
-    const angleStep = 2 * Math.PI / n;
+    const angleStep = (2 * Math.PI) / n;
     let matchScore = 0;
     let totalScore = 0;
     for (const peak of peaks) {
@@ -403,7 +397,7 @@ function scbeToQuasicrystal(v) {
     const pos = [0, 0];
     for (let d = 0; d < 2; d++) {
         for (let i = 0; i < 6; i++) {
-            pos[d] += projMatrix[d][i] * v[i] / Math.sqrt(2 + exports.PHI);
+            pos[d] += (projMatrix[d][i] * v[i]) / Math.sqrt(2 + exports.PHI);
         }
     }
     return {
@@ -420,8 +414,7 @@ function nearestQCVertex(point, lattice) {
     let minDist = Infinity;
     let nearest = lattice[0];
     for (const lp of lattice) {
-        const dist = Math.sqrt((point[0] - lp.position[0]) ** 2 +
-            (point[1] - lp.position[1]) ** 2);
+        const dist = Math.sqrt((point[0] - lp.position[0]) ** 2 + (point[1] - lp.position[1]) ** 2);
         if (dist < minDist) {
             minDist = dist;
             nearest = lp;
@@ -457,10 +450,7 @@ function quasicrystalHash(input, lattice) {
         const angle = (byte / 256) * 2 * Math.PI;
         const radius = ((byte % 16) + 1) * 0.1;
         // Move in quasicrystal space
-        current = [
-            current[0] + radius * Math.cos(angle) * exports.PHI,
-            current[1] + radius * Math.sin(angle),
-        ];
+        current = [current[0] + radius * Math.cos(angle) * exports.PHI, current[1] + radius * Math.sin(angle)];
         // Snap to nearest lattice point
         const { nearest } = nearestQCVertex(current, lattice);
         path.push(nearest);

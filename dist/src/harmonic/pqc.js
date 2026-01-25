@@ -32,14 +32,14 @@ function barrettReduce(a) {
     const v = Math.floor((1 << 26) / Q);
     let t = Math.floor((v * a + (1 << 25)) / (1 << 26));
     t = a - t * Q;
-    return t < 0 ? t + Q : (t >= Q ? t - Q : t);
+    return t < 0 ? t + Q : t >= Q ? t - Q : t;
 }
 /**
  * Montgomery reduction
  */
 function montgomeryReduce(a) {
     const QINV = 62209; // Q^(-1) mod 2^16
-    const u = (a * QINV) & 0xFFFF;
+    const u = (a * QINV) & 0xffff;
     let t = (a - u * Q) >> 16;
     return t < 0 ? t + Q : t;
 }
@@ -82,7 +82,7 @@ function invNtt(poly) {
             }
         }
     }
-    return result.map(x => montgomeryReduce(x * F));
+    return result.map((x) => montgomeryReduce(x * F));
 }
 exports.invNtt = invNtt;
 /**
@@ -161,14 +161,30 @@ exports.secureRandomBytes = secureRandomBytes;
 // ═══════════════════════════════════════════════════════════════
 const KECCAK_ROUNDS = 24;
 const KECCAK_RC = [
-    0x0000000000000001n, 0x0000000000008082n, 0x800000000000808an,
-    0x8000000080008000n, 0x000000000000808bn, 0x0000000080000001n,
-    0x8000000080008081n, 0x8000000000008009n, 0x000000000000008an,
-    0x0000000000000088n, 0x0000000080008009n, 0x000000008000000an,
-    0x000000008000808bn, 0x800000000000008bn, 0x8000000000008089n,
-    0x8000000000008003n, 0x8000000000008002n, 0x8000000000000080n,
-    0x000000000000800an, 0x800000008000000an, 0x8000000080008081n,
-    0x8000000000008080n, 0x0000000080000001n, 0x8000000080008008n,
+    0x0000000000000001n,
+    0x0000000000008082n,
+    0x800000000000808an,
+    0x8000000080008000n,
+    0x000000000000808bn,
+    0x0000000080000001n,
+    0x8000000080008081n,
+    0x8000000000008009n,
+    0x000000000000008an,
+    0x0000000000000088n,
+    0x0000000080008009n,
+    0x000000008000000an,
+    0x000000008000808bn,
+    0x800000000000008bn,
+    0x8000000000008089n,
+    0x8000000000008003n,
+    0x8000000000008002n,
+    0x8000000000000080n,
+    0x000000000000800an,
+    0x800000008000000an,
+    0x8000000080008081n,
+    0x8000000000008080n,
+    0x0000000080000001n,
+    0x8000000080008008n,
 ];
 /**
  * Keccak-f[1600] permutation (simplified for demonstration)
@@ -196,7 +212,7 @@ function keccakF(state) {
             const y = (2 * t + 3) % 5;
             const idx = x + 5 * y;
             const temp = state[idx];
-            state[idx] = rotl64(current, BigInt(((t + 1) * (t + 2) / 2) % 64));
+            state[idx] = rotl64(current, BigInt((((t + 1) * (t + 2)) / 2) % 64));
             current = temp;
         }
         // Chi step
@@ -223,14 +239,14 @@ function rotl64(x, n) {
  * SHAKE128 extendable output function (XOF)
  */
 function shake128(input, outputLength) {
-    return shake(input, outputLength, 0x1F, 168);
+    return shake(input, outputLength, 0x1f, 168);
 }
 exports.shake128 = shake128;
 /**
  * SHAKE256 extendable output function (XOF)
  */
 function shake256(input, outputLength) {
-    return shake(input, outputLength, 0x1F, 136);
+    return shake(input, outputLength, 0x1f, 136);
 }
 exports.shake256 = shake256;
 /**
@@ -669,7 +685,7 @@ function sampleUniform(seed, i, j) {
     let idx = 0;
     let polyIdx = 0;
     while (polyIdx < N) {
-        const d1 = expanded[idx] + 256 * (expanded[idx + 1] & 0x0F);
+        const d1 = expanded[idx] + 256 * (expanded[idx + 1] & 0x0f);
         const d2 = (expanded[idx + 1] >> 4) + 16 * expanded[idx + 2];
         idx += 3;
         if (d1 < Q)
@@ -684,7 +700,7 @@ function sampleUniform(seed, i, j) {
  */
 function sampleCBD(seed, nonce, eta) {
     const input = new Uint8Array([...seed, nonce]);
-    const expanded = shake256(input, eta * N / 4);
+    const expanded = shake256(input, (eta * N) / 4);
     const poly = new Array(N);
     for (let i = 0; i < N; i++) {
         let a = 0, b = 0;
@@ -704,12 +720,12 @@ function sampleCBD(seed, nonce, eta) {
  * Sample mask polynomial for ML-DSA
  */
 function sampleMask(seed, kappa, i, gamma1) {
-    const input = new Uint8Array([...seed, kappa & 0xFF, (kappa >> 8) & 0xFF, i]);
+    const input = new Uint8Array([...seed, kappa & 0xff, (kappa >> 8) & 0xff, i]);
     const bits = gamma1 === 131072 ? 18 : 20;
-    const expanded = shake256(input, bits * N / 8);
+    const expanded = shake256(input, (bits * N) / 8);
     const poly = new Array(N);
     for (let j = 0; j < N; j++) {
-        const byteStart = Math.floor(j * bits / 8);
+        const byteStart = Math.floor((j * bits) / 8);
         const bitStart = (j * bits) % 8;
         let val = 0;
         for (let k = 0; k < Math.ceil(bits / 8) + 1; k++) {
@@ -739,7 +755,7 @@ function sampleInBall(seed, tau) {
             j = expanded[idx++];
         } while (j > i);
         poly[i] = poly[j];
-        poly[j] = (signs & 1n) ? Q - 1 : 1;
+        poly[j] = signs & 1n ? Q - 1 : 1;
         signs >>= 1n;
     }
     return poly;
@@ -826,15 +842,15 @@ function useHints(w, hints, params) {
 // Encoding/Decoding Functions (Simplified)
 // ═══════════════════════════════════════════════════════════════
 function encodeMLKEMPublicKey(t, rho, k) {
-    const encoded = new Uint8Array(32 + k * N * 12 / 8);
+    const encoded = new Uint8Array(32 + (k * N * 12) / 8);
     encoded.set(rho, 0);
     // Simplified: just store polynomial coefficients
     let idx = 32;
     for (let i = 0; i < k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = t[i][j] & 0xFF;
+            encoded[idx++] = t[i][j] & 0xff;
             if (idx < encoded.length)
-                encoded[idx++] = (t[i][j] >> 8) & 0x0F;
+                encoded[idx++] = (t[i][j] >> 8) & 0x0f;
         }
     }
     return encoded;
@@ -848,23 +864,23 @@ function decodeMLKEMPublicKey(pk, k) {
         for (let j = 0; j < N; j++) {
             t[i][j] = pk[idx++];
             if (idx < pk.length)
-                t[i][j] |= (pk[idx++] & 0x0F) << 8;
+                t[i][j] |= (pk[idx++] & 0x0f) << 8;
         }
     }
     return { t, rho };
 }
 function encodeMLKEMSecretKey(s, pk, seed, k) {
-    const encoded = new Uint8Array(k * N * 12 / 8 + pk.length + 64);
+    const encoded = new Uint8Array((k * N * 12) / 8 + pk.length + 64);
     let idx = 0;
     for (let i = 0; i < k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = s[i][j] & 0xFF;
-            if (idx < k * N * 12 / 8)
-                encoded[idx++] = (s[i][j] >> 8) & 0x0F;
+            encoded[idx++] = s[i][j] & 0xff;
+            if (idx < (k * N * 12) / 8)
+                encoded[idx++] = (s[i][j] >> 8) & 0x0f;
         }
     }
-    encoded.set(pk, k * N * 12 / 8);
-    encoded.set(seed, k * N * 12 / 8 + pk.length);
+    encoded.set(pk, (k * N * 12) / 8);
+    encoded.set(seed, (k * N * 12) / 8 + pk.length);
     return encoded;
 }
 function decodeMLKEMSecretKey(sk, k) {
@@ -874,26 +890,26 @@ function decodeMLKEMSecretKey(sk, k) {
         s[i] = new Array(N);
         for (let j = 0; j < N; j++) {
             s[i][j] = sk[idx++];
-            if (idx < k * N * 12 / 8)
-                s[i][j] |= (sk[idx++] & 0x0F) << 8;
+            if (idx < (k * N * 12) / 8)
+                s[i][j] |= (sk[idx++] & 0x0f) << 8;
         }
     }
-    const pkLen = 32 + k * N * 12 / 8;
-    const publicKey = sk.slice(k * N * 12 / 8, k * N * 12 / 8 + pkLen);
-    const seed = sk.slice(k * N * 12 / 8 + pkLen, k * N * 12 / 8 + pkLen + 32);
+    const pkLen = 32 + (k * N * 12) / 8;
+    const publicKey = sk.slice((k * N * 12) / 8, (k * N * 12) / 8 + pkLen);
+    const seed = sk.slice((k * N * 12) / 8 + pkLen, (k * N * 12) / 8 + pkLen + 32);
     return { s, publicKey, seed };
 }
 function encodeMLKEMCiphertext(u, v, du, dv, k) {
-    const encoded = new Uint8Array(k * N * du / 8 + N * dv / 8);
+    const encoded = new Uint8Array((k * N * du) / 8 + (N * dv) / 8);
     // Simplified encoding
     let idx = 0;
     for (let i = 0; i < k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = u[i][j] & 0xFF;
+            encoded[idx++] = u[i][j] & 0xff;
         }
     }
     for (let j = 0; j < N && idx < encoded.length; j++) {
-        encoded[idx++] = v[j] & 0xFF;
+        encoded[idx++] = v[j] & 0xff;
     }
     return encoded;
 }
@@ -942,8 +958,8 @@ function encodeMLDSAPublicKey(rho, t, k) {
     let idx = 32;
     for (let i = 0; i < k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = t[i][j] & 0xFF;
-            encoded[idx++] = (t[i][j] >> 8) & 0xFF;
+            encoded[idx++] = t[i][j] & 0xff;
+            encoded[idx++] = (t[i][j] >> 8) & 0xff;
         }
     }
     return encoded;
@@ -972,20 +988,20 @@ function encodeMLDSASecretKey(rho, K, seed, s1, s2, t, params) {
     idx += 32;
     for (let i = 0; i < params.l; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = s1[i][j] & 0xFF;
-            encoded[idx++] = (s1[i][j] >> 8) & 0xFF;
+            encoded[idx++] = s1[i][j] & 0xff;
+            encoded[idx++] = (s1[i][j] >> 8) & 0xff;
         }
     }
     for (let i = 0; i < params.k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = s2[i][j] & 0xFF;
-            encoded[idx++] = (s2[i][j] >> 8) & 0xFF;
+            encoded[idx++] = s2[i][j] & 0xff;
+            encoded[idx++] = (s2[i][j] >> 8) & 0xff;
         }
     }
     for (let i = 0; i < params.k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = t[i][j] & 0xFF;
-            encoded[idx++] = (t[i][j] >> 8) & 0xFF;
+            encoded[idx++] = t[i][j] & 0xff;
+            encoded[idx++] = (t[i][j] >> 8) & 0xff;
         }
     }
     return encoded;
@@ -1030,9 +1046,9 @@ function encodeMLDSASignature(cHash, z, hints, params) {
     for (let i = 0; i < params.l; i++) {
         for (let j = 0; j < N; j++) {
             const coeff = z[i][j];
-            encoded[idx++] = coeff & 0xFF;
-            encoded[idx++] = (coeff >> 8) & 0xFF;
-            encoded[idx++] = (coeff >> 16) & 0xFF;
+            encoded[idx++] = coeff & 0xff;
+            encoded[idx++] = (coeff >> 8) & 0xff;
+            encoded[idx++] = (coeff >> 16) & 0xff;
         }
     }
     for (let i = 0; i < params.k; i++) {
@@ -1051,7 +1067,7 @@ function decodeMLDSASignature(sig, params) {
         z[i] = new Array(N);
         for (let j = 0; j < N; j++) {
             z[i][j] = sig[idx++] | (sig[idx++] << 8) | (sig[idx++] << 16);
-            if (z[i][j] > 0x7FFFFF)
+            if (z[i][j] > 0x7fffff)
                 z[i][j] -= 0x1000000;
         }
     }
@@ -1069,7 +1085,7 @@ function encodeW1(w1, k) {
     let idx = 0;
     for (let i = 0; i < k; i++) {
         for (let j = 0; j < N; j++) {
-            encoded[idx++] = w1[i][j] & 0xFF;
+            encoded[idx++] = w1[i][j] & 0xff;
         }
     }
     return encoded;
@@ -1079,8 +1095,8 @@ function flattenT(t) {
     let idx = 0;
     for (const row of t) {
         for (const coeff of row) {
-            flat[idx++] = coeff & 0xFF;
-            flat[idx++] = (coeff >> 8) & 0xFF;
+            flat[idx++] = coeff & 0xff;
+            flat[idx++] = (coeff >> 8) & 0xff;
         }
     }
     return flat;

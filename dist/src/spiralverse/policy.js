@@ -52,7 +52,7 @@ function enforcePolicy(validTongues, policy = 'standard') {
         return true;
     }
     // Check if all required tongues are present
-    const missing = required.filter(t => !validTongues.includes(t));
+    const missing = required.filter((t) => !validTongues.includes(t));
     if (missing.length > 0) {
         throw new types_1.PolicyError(`Policy '${policy}' requires tongues [${required.join(', ')}], ` +
             `but missing [${missing.join(', ')}]. ` +
@@ -121,18 +121,27 @@ exports.getPolicyDescription = getPolicyDescription;
 function suggestPolicy(operation) {
     const op = operation.toLowerCase();
     // Critical operations
-    if (op.includes('deploy') || op.includes('grant') || op.includes('revoke') ||
-        op.includes('delete_resource') || op.includes('modify_permission')) {
+    if (op.includes('deploy') ||
+        op.includes('grant') ||
+        op.includes('revoke') ||
+        op.includes('delete_resource') ||
+        op.includes('modify_permission')) {
         return 'critical';
     }
     // Secret operations
-    if (op.includes('delete') || op.includes('secret') || op.includes('credential') ||
-        op.includes('key') || op.includes('password')) {
+    if (op.includes('delete') ||
+        op.includes('secret') ||
+        op.includes('credential') ||
+        op.includes('key') ||
+        op.includes('password')) {
         return 'secret';
     }
     // Strict operations
-    if (op.includes('write') || op.includes('update') || op.includes('create') ||
-        op.includes('modify') || op.includes('config')) {
+    if (op.includes('write') ||
+        op.includes('update') ||
+        op.includes('create') ||
+        op.includes('modify') ||
+        op.includes('config')) {
         return 'strict';
     }
     // Standard operations (read, query, list, etc.)

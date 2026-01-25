@@ -19,7 +19,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpiralSealSS1 = exports.SacredTongueTokenizer = exports.getTongueForSection = exports.UMBROTH = exports.SECTION_TONGUES = exports.SACRED_TONGUES = exports.RUNETHIC = exports.KOR_AELIN = exports.DRAUMRIC = exports.CASSISIVADAN = exports.AVALI = exports.projectToBall = exports.phaseModulation = exports.multiWellPotential = exports.multiWellGradient = exports.multiPhaseModulation = exports.mobiusAdd = exports.logMap0 = exports.inverseBreathTransform = exports.hyperbolicDistance = exports.expMap0 = exports.breathTransform = exports.applyHyperbolicPipeline = exports.createVertex = exports.HamiltonianCFI = exports.ControlFlowGraph = exports.generateTestSignal = exports.generateNoise = exports.AudioAxisProcessor = exports.getFluxState = exports.TONGUES = exports.LanguesMetric = exports.FluxingLanguesMetric = exports.standingWaveAmplitude = exports.nodalSurface = exports.fluxRedistribution = exports.checkCymaticResonance = exports.cavityResonance = exports.bottleBeamIntensity = exports.harmonicCouplingMatrix = exports.halAttention = exports.securityLevel = exports.securityBits = exports.octaveTranspose = exports.harmonicScale = exports.harmonicDistance = exports.log2 = exports.assertIntGE = exports.assertFinite = exports.CONSTANTS = void 0;
 exports.PHDMDeviationDetector = exports.CubicSpline6D = exports.CANONICAL_POLYHEDRA = exports.scbeToQuasicrystal = exports.quasicrystalPotential = exports.quasicrystalHash = exports.quasicrystal5to2 = exports.quasicrystal4to2 = exports.penroseToLattice = exports.penroseTiling = exports.penroseRhombus = exports.penroseInitial = exports.penroseDeflate = exports.nearestQCVertex = exports.fibonacciWord = exports.fibonacciSequence = exports.fibonacci2D = exports.fibonacci1D = exports.diffractionPattern = exports.defaultQCLattice = exports.cutAndProject2D = exports.checkRotationalSymmetry = exports.ammannBeenkerSquare = exports.ammannBeenkerRhombus = exports.SILVER_RATIO = exports.QCLatticeProvider = exports.PHI_INV = exports.PHI = exports.shake256 = exports.shake128 = exports.secureRandomBytes = exports.ntt = exports.mlkemKeyGen = exports.mlkemEncapsulate = exports.mlkemDecapsulate = exports.mldsaVerify = exports.mldsaSign = exports.mldsaKeyGen = exports.invNtt = exports.defaultPQCProvider = exports.PQCProvider = exports.unseal = exports.seal = exports.randomBytes = exports.parseSS1Blob = exports.formatSS1Blob = exports.encodeToSpelltext = exports.decodeFromSpelltext = exports.computeLWSWeights = exports.computeLWSScore = void 0;
-exports.topologicalHash = exports.serializePolyhedron = exports.isValidTopology = exports.eulerCharacteristic = exports.distance6D = exports.computeCentroid = exports.PolyhedralHamiltonianDefenseManifold = exports.PHDMHamiltonianPath = void 0;
+exports.spectralGenerator = exports.TONGUE_COLORS = exports.SpectralIdentityGenerator = exports.SPECTRAL_BANDS = exports.topologicalHash = exports.serializePolyhedron = exports.isValidTopology = exports.eulerCharacteristic = exports.distance6D = exports.computeCentroid = exports.PolyhedralHamiltonianDefenseManifold = exports.PHDMHamiltonianPath = void 0;
 // ═══════════════════════════════════════════════════════════════
 // Constants and Types
 // ═══════════════════════════════════════════════════════════════
@@ -205,4 +205,14 @@ Object.defineProperty(exports, "eulerCharacteristic", { enumerable: true, get: f
 Object.defineProperty(exports, "isValidTopology", { enumerable: true, get: function () { return phdm_js_1.isValidTopology; } });
 Object.defineProperty(exports, "serializePolyhedron", { enumerable: true, get: function () { return phdm_js_1.serializePolyhedron; } });
 Object.defineProperty(exports, "topologicalHash", { enumerable: true, get: function () { return phdm_js_1.topologicalHash; } });
+// ═══════════════════════════════════════════════════════════════
+// Spectral Identity - Rainbow Chromatic Fingerprinting
+// ═══════════════════════════════════════════════════════════════
+var spectral_identity_js_1 = require("./spectral-identity.js");
+// Constants
+Object.defineProperty(exports, "SPECTRAL_BANDS", { enumerable: true, get: function () { return spectral_identity_js_1.SPECTRAL_BANDS; } });
+// Generator
+Object.defineProperty(exports, "SpectralIdentityGenerator", { enumerable: true, get: function () { return spectral_identity_js_1.SpectralIdentityGenerator; } });
+Object.defineProperty(exports, "TONGUE_COLORS", { enumerable: true, get: function () { return spectral_identity_js_1.TONGUE_COLORS; } });
+Object.defineProperty(exports, "spectralGenerator", { enumerable: true, get: function () { return spectral_identity_js_1.spectralGenerator; } });
 //# sourceMappingURL=index.js.map

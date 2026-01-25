@@ -26,7 +26,7 @@ export type PolicyLevel = 'standard' | 'strict' | 'secret' | 'critical';
  */
 export interface RWP2MultiEnvelope<T = any> {
     /** Protocol version (always "2.1") */
-    ver: "2.1";
+    ver: '2.1';
     /** Primary tongue indicating intent domain */
     primary_tongue: TongueID;
     /** Additional authenticated data (metadata) */

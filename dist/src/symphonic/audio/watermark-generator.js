@@ -33,7 +33,7 @@ function generateWatermark(challenge, bins, phases, N, gamma) {
             const c_j = challenge[j]; // 0 or 1
             // s[n] = Σ a_j · (-1)^(c_j) · sin(2π k_j · n/N + φ_j)
             const sign = c_j === 0 ? 1 : -1;
-            sample += a_j * sign * Math.sin(2 * Math.PI * k_j * n / N + phi_j);
+            sample += a_j * sign * Math.sin((2 * Math.PI * k_j * n) / N + phi_j);
         }
         waveform[n] = gamma * sample;
     }
@@ -48,7 +48,7 @@ function generateWatermarkWithMetadata(challenge, bins, phases, N, gamma) {
     return {
         waveform,
         bins: [...bins],
-        phases: [...phases]
+        phases: [...phases],
     };
 }
 exports.generateWatermarkWithMetadata = generateWatermarkWithMetadata;
